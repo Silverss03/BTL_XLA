@@ -9,7 +9,7 @@ from keras.models import load_model
 from cvzone.HandTrackingModule import HandDetector
 from string import ascii_uppercase
 import enchant
-ddd=enchant.Dict("en-US")
+ddd=enchant.Dict("en_US")
 hd = HandDetector(maxHands=1)
 hd2 = HandDetector(maxHands=1)
 import tkinter as tk
@@ -104,10 +104,6 @@ class Application:
         self.clear.place(x=1205, y=630)
         self.clear.config(text="Clear", font=("Courier", 20), wraplength=100, command=self.clear_fun)
 
-
-
-
-
         self.str = " "
         self.ccc=0
         self.word = " "
@@ -137,10 +133,11 @@ class Application:
             if hands:
                 # #print(" --------- lmlist=",hands[1])
                 hand = hands[0]
-                x, y, w, h = hand['bbox']
+                if len(hand) == 0: return 
+                x, y, w, h = hand[0]['bbox']
                 image = cv2image_copy[y - offset:y + h + offset, x - offset:x + w + offset]
 
-                white = cv2.imread("C:/Users/Leena Ali/Documents/DataScienceProjects/Sign-Language-To-Text-and-Speech-Conversion-master/white.jpg")
+                white = cv2.imread("white.jpg")
                 # img_final=img_final1=img_final2=0
 
                 handz = hd2.findHands(image, draw=False, flipType=True)
@@ -148,7 +145,8 @@ class Application:
                 self.ccc += 1
                 if handz:
                     hand = handz[0]
-                    self.pts = hand['lmList']
+                    if len(hand) == 0: return 
+                    self.pts = hand[0]['lmList']
                     # x1,y1,w1,h1=hand['bbox']
 
                     os = ((400 - w) // 2) - 15
