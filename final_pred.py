@@ -15,6 +15,10 @@ hd = HandDetector(maxHands=1)
 hd2 = HandDetector(maxHands=1)
 import tkinter as tk
 from PIL import Image, ImageTk
+from gtts import gTTS
+from pydub import AudioSegment
+from pydub.playback import play
+from playsound import playsound
 
 offset=29
 
@@ -261,8 +265,16 @@ class Application:
 
 
     def speak_fun(self):
-        self.speak_engine.say(self.str)
-        self.speak_engine.runAndWait()
+        tts = gTTS(self.str, lang='vi')
+        tts.save("vietnamese_test.mp3")
+        audio = AudioSegment.from_mp3("vietnamese_test.mp3")
+        faster_audio = audio.speedup(playback_speed=1.25)
+        faster_audio.export("vietnamese_test_fast.mp3", format="mp3")
+        playsound("vietnamese_test_fast.mp3")
+        os.remove("vietnamese_test_fast.mp3")
+        os.remove("vietnamese_test.mp3")
+        # self.speak_engine.say(self.str)
+        # self.speak_engine.runAndWait()
 
 
     def clear_fun(self):
