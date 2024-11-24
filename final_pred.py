@@ -8,6 +8,7 @@ import pyttsx3
 from keras.models import load_model
 from cvzone.HandTrackingModule import HandDetector
 from string import ascii_uppercase
+from trans_text import restore_diacritics
 import enchant
 ddd=enchant.Dict("en_US")
 hd = HandDetector(maxHands=1)
@@ -97,11 +98,15 @@ class Application:
         self.b4.place(x=990, y=700)
 
         self.speak = tk.Button(self.root)
-        self.speak.place(x=1305, y=630)
+        self.speak.place(x=1215, y=630)
         self.speak.config(text="Speak", font=("Courier", 20), wraplength=100, command=self.speak_fun)
 
+        self.translate_button = tk.Button(self.root)
+        self.translate_button.place(x=1325, y=630)
+        self.translate_button.config(text="Translate", font=("Courier", 20), wraplength=150, command=self.translate_sentence)
+
         self.clear = tk.Button(self.root)
-        self.clear.place(x=1205, y=630)
+        self.clear.place(x=1105, y=630)
         self.clear.config(text="Clear", font=("Courier", 20), wraplength=100, command=self.clear_fun)
 
         self.str = " "
@@ -242,6 +247,17 @@ class Application:
         last_idx = len(self.str)
         self.str = self.str[:idx_word]
         self.str = self.str + self.word4.upper()
+
+    def translate_sentence(self):
+        # Get the current sentence from self.T3
+        current_sentence = self.str.strip()
+
+        # Restore diacritics
+        restored_sentence = restore_diacritics(current_sentence)
+        self.str = restored_sentence
+        self.panel5.config(text=self.str, font=("Courier", 30), wraplength=1025)
+        print("Restored sentence:", restored_sentence)
+
 
 
     def speak_fun(self):
